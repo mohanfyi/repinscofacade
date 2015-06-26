@@ -8,27 +8,26 @@ var app = express();
 /* Include the app engine handlers to respond to start, stop, and health checks. */
 app.use(require('./lib/appengine-handlers'));
 
-app.get('/getdashboarddataforclient', function(req, res) {
-	var query = url.parse(req.url, true).query;
-	var options = {
-	  host: 'default-dot-nmclvpoc.appspot.com',
-	  path: '?productnum=' + query.clientid
-	};
-
-	callback = function(res) {
-		  var str = '';
-
-		  //another chunk of data has been recieved, so append it to `str`
-		  res.on('data', function (chunk) {
-			str += chunk;
-		  });
-
-		  //the whole response has been recieved, so we just print it out here
-		  res.on('end', function () {
-			console.log(str);
-		  });
-	}
-	http.request(options, callback).end();
+app.get('/getdashboarddataforclient', function(req, response) {
+        var query = url.parse(req.url, true).query;
+        var options = {
+          host: 'default-dot-nmclvpoc.appspot.com',
+          path: '/?productnum=' + query.clientid
+        };
+        var str='';
+        callback = function(res) {
+                  //another chunk of data has been recieved, so append it to `str`
+                  res.on('data', function (chunk) {
+                        str += chunk;
+                  });
+                  //the whole response has been recieved, so we just print it out here
+                  res.on('end', function () {
+                        console.log(str);
+                        response.header('Access-Control-Allow-Origin', '*');
+                        response.status(200).send(str);
+                  });
+        }
+        http.request(options, callback).end();
 });
 
 app.get('/getdashboarddataforclientproxy', function(req, res) {
