@@ -10,10 +10,10 @@ app.use(require('./lib/appengine-handlers'));
 
 app.get('/getdashboarddataforclient', function(req, res) {
 	var query = url.parse(req.url, true).query;
-	/*var options = {
+	var options = {
 	  host: 'default-dot-nmclvpoc.appspot.com',
 	  path: '?productnum=' + query.clientid
-	};*/
+	};
 
 	callback = function(res) {
 		  var str = '';
